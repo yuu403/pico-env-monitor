@@ -1,0 +1,91 @@
+;
+; i2c_bb.pio — PIO bitbang I2C
+;
+; 設計根拠:
+;   - クロックストレッチング非対応（BME280はストレッチを行わない: BST-BME280-DS002 Sec.4）
+;   - サイドセットでSCLを決定論的に制御（IRQレイテンシ排除）
+;   - 1ステートマシンで送受信を統合
+;
+; ピンアサイン:
+;   OUT/IN/SET ピン → SDA (GP0)
+;   SIDE SET ピン   → SCL (GP1)
+;
+; クロック:
+;   sys_clk=125MHz, clkdiv=64 → PIO clk≈1.95MHz
+;   1ビット=8命令サイクル → I2C clk≈244kHz (Fast-mode 以下)
+;   ※ BME280 は最大 3.4MHz対応だが、安全マージンで 244kHz に設定
+;
+; OSR: 送信データ (32bit, MSB first, 8bit使用)
+; ISR: 受信データ (8bit) / ACKビット
+;
+; --- 使用方法 ---
+; TX: pio_sm_put(pio, sm, byte << 24)  // MSB alignして送る
+; RX: pio_sm_get(pio, sm)              // 受信後ISRからpull
+;
+
+.program i2c_bb
+.side_set 1 opt
+
+; -------------------------------------------------------
+; START condition
+;   SCL=H, SDA H→L, SCL L
+; -------------------------------------------------------
+.wrap_target
+public start_cond:
+    set pindirs, 0   side 1 [1]  ; SDA=Hi-Z(High), SCL=High
+    set pindirs, 1   side 1 [1]  ; SDA=Low (START), SCL=High
+    set pindirs, 1   side 0      ; SCL=Low
+
+; -------------------------------------------------------
+; 8ビット送信 (MSB first)
+; OSRから1ビットずつ取り出してSCLをパルス
+; -------------------------------------------------------
+public tx_byte:
+    set x, 7                     ; 8ビットカウンタ
+tx_loop:
+    out pindirs, 1   side 0 [1]  ; SDA = OSRビット, SCL=Low
+    nop              side 1 [2]  ; SCL=High (データ確定)
+    jmp x-- tx_loop  side 0      ; SCL=Low, 次ビットへ
+
+; -------------------------------------------------------
+; ACK受信
+; スレーブがSDAをLowにする = ACK
+; 戻り値: ISR[0]=0(ACK) / 1(NACK)
+; -------------------------------------------------------
+public rx_ack:
+    set pindirs, 0   side 0 [1]  ; SDA=Hi-Z（スレーブへ解放）
+    nop              side 1 [1]  ; SCL=High
+    in pins, 1       side 0      ; SDAをISRへ取込
+    push noblock                 ; CPUへ転送（ノンブロック）
+
+; -------------------------------------------------------
+; 8ビット受信 (MSB first)
+; SDAをHi-Zにしてスレーブからデータを受け取る
+; -------------------------------------------------------
+public rx_byte:
+    set x, 7
+    set pindirs, 0               ; SDA=Hi-Z（受信モード）
+rx_loop:
+    nop              side 1 [1]  ; SCL=High
+    in pins, 1       side 0      ; SDAをISRへ取込
+    jmp x-- rx_loop              ; 8ビット完了まで繰り返す
+    push noblock                 ; CPUへ転送
+
+; -------------------------------------------------------
+; ACK送信（マスターからスレーブへ）
+; OSR[31]=0 → ACK(SDA Low), 1 → NACK(SDA High=Hi-Z)
+; -------------------------------------------------------
+public tx_ack:
+    out pindirs, 1   side 0 [1]  ; SDA = ACK/NACK
+    nop              side 1 [1]  ; SCL=High
+    nop              side 0      ; SCL=Low
+
+; -------------------------------------------------------
+; STOP condition
+;   SCL=H, SDA L→H
+; -------------------------------------------------------
+public stop_cond:
+    set pindirs, 1   side 0      ; SDA=Low, SCL=Low
+    set pindirs, 1   side 1 [1]  ; SCL=High
+    set pindirs, 0   side 1      ; SDA=High (STOP)
+.wrap
