@@ -1,0 +1,5 @@
+/home/teranishi-yu/pico-env-monitor/build/pioasm-install/pioasm/pioasm
+/home/teranishi-yu/pico-env-monitor/build/pioasm-install/pioasm/pioasmTargets.cmake
+/home/teranishi-yu/pico-env-monitor/build/pioasm-install/pioasm/pioasmTargets-release.cmake
+/home/teranishi-yu/pico-env-monitor/build/pioasm-install/pioasm/pioasmConfig.cmake
+/home/teranishi-yu/pico-env-monitor/build/pioasm-install/pioasm/pioasmConfigVersion.cmake

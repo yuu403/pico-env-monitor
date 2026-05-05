@@ -1,0 +1,29 @@
+CMakeFiles/pico_env_monitor.dir/home/teranishi-yu/pico-sdk/src/rp2_common/pico_fix/rp2040_usb_device_enumeration/rp2040_usb_device_enumeration.c.o: \
+ /home/teranishi-yu/pico-sdk/src/rp2_common/pico_fix/rp2040_usb_device_enumeration/rp2040_usb_device_enumeration.c \
+ /home/teranishi-yu/pico-sdk/src/common/pico_base_headers/include/pico.h \
+ /home/teranishi-yu/pico-sdk/src/common/pico_base_headers/include/pico/types.h \
+ /home/teranishi-yu/pico-sdk/src/common/pico_base_headers/include/pico/assert.h \
+ /usr/lib/gcc/arm-none-eabi/10.3.1/include/stdbool.h \
+ /usr/include/newlib/assert.h /usr/include/newlib/_ansi.h \
+ /usr/include/newlib/newlib.h /usr/include/newlib/_newlib_version.h \
+ /usr/include/newlib/sys/config.h /usr/include/newlib/machine/ieeefp.h \
+ /usr/include/newlib/sys/features.h \
+ /usr/lib/gcc/arm-none-eabi/10.3.1/include/stdint.h \
+ /usr/lib/gcc/arm-none-eabi/10.3.1/include/stddef.h \
+ /home/teranishi-yu/pico-env-monitor/build/generated/pico_base/pico/version.h \
+ /home/teranishi-yu/pico-sdk/src/common/pico_base_headers/include/pico/config.h \
+ /home/teranishi-yu/pico-env-monitor/build/generated/pico_base/pico/config_autogen.h \
+ /home/teranishi-yu/pico-sdk/src/boards/include/boards/pico_w.h \
+ /home/teranishi-yu/pico-sdk/src/rp2_common/cmsis/include/cmsis/rename_exceptions.h \
+ /home/teranishi-yu/pico-sdk/src/rp2040/pico_platform/include/pico/platform.h \
+ /home/teranishi-yu/pico-sdk/src/rp2_common/pico_platform_compiler/include/pico/platform/compiler.h \
+ /home/teranishi-yu/pico-sdk/src/rp2040/hardware_regs/include/hardware/platform_defs.h \
+ /usr/include/newlib/sys/cdefs.h \
+ /usr/include/newlib/machine/_default_types.h \
+ /home/teranishi-yu/pico-sdk/src/common/pico_base_headers/include/pico/types.h \
+ /home/teranishi-yu/pico-sdk/src/rp2_common/pico_platform_sections/include/pico/platform/sections.h \
+ /home/teranishi-yu/pico-sdk/src/rp2_common/pico_platform_panic/include/pico/platform/panic.h \
+ /home/teranishi-yu/pico-sdk/src/rp2_common/pico_platform_common/include/pico/platform/common.h \
+ /home/teranishi-yu/pico-sdk/src/rp2040/hardware_regs/include/hardware/regs/addressmap.h \
+ /home/teranishi-yu/pico-sdk/src/rp2040/hardware_regs/include/hardware/regs/sio.h \
+ /home/teranishi-yu/pico-sdk/src/common/pico_base_headers/include/pico/error.h
